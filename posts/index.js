@@ -51,14 +51,14 @@ router.post("/", ({body}, res) => {
     }
 });
 
-router.post("/:id/comments", (req, res) => {
+router.post("/:id/comments", ({body, params}, res) => {
     try {
         if (body.text) {
             let comment = {
                 text: body.text,
-                post_id: req.params.id,
+                post_id: params.id,
             };
-            db.insert(comment)
+            db.insertComment(comment)
                 .then(res2 => res.status(201).json(res2))
                 .catch(() => res.status(404).json({ message: "The post with the specified ID does not exist." }));
         } else {
@@ -79,10 +79,10 @@ router.delete("/:id", (req, res) => {
     }
 });
 
-router.put("/:id", ({body}, res) => {
+router.put("/:id", ({body, params}, res) => {
     try {
         if (body.title && body.contents) {
-            db.update(req.params.id, {
+            db.update(params.id, {
                 title: body.title,
                 contents: body.contents,
             }).then(res2 => res.status(200).json(res2))
